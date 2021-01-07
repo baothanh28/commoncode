@@ -1,0 +1,43 @@
+with cte as (
+    select
+        p.propertyID,
+        0 as parentID,
+        p.title,
+        p.typeid,
+        p.[value],
+        p.children
+    from openjson(@json, '$.propertyObjects') with (
+        propertyID int,
+        title nvarchar(100),
+        typeid int,
+        [value] nvarchar(1000),
+        children nvarchar(max) as json
+    ) as p
+
+    union all
+
+    select
+        p.propertyID,
+        c.propertyID,
+        p.title,
+        p.typeid,
+        p.[value],
+        p.children  
+    from cte as c
+        cross apply openjson(c.children) with (
+            propertyID int,
+            title nvarchar(100),
+            typeid int,
+            [value] nvarchar(1000),
+            children nvarchar(max) as json
+        ) as p
+    where
+        c.children <> '[{}]'
+)
+select
+    c.propertyID,
+    c.parentID,
+    c.title,
+    c.typeid,
+    c.value
+from cte as c
