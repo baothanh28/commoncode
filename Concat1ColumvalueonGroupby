@@ -1,0 +1,47 @@
+Method1
+SELECT [CreatedTime]
+      ,[DeletedTime]
+      ,[DeletedBy]
+      ,[ResourceId]
+      ,[AccountId]
+      ,STUFF((select ',' + raType.Type 
+              from vwAllAssignments raType 
+              where raType.AccountId = vwAllAssignments.AccountId and 
+                    raType.ResourceId = vwAllAssignments.ResourceId and 
+                    raType.DeletedBy is null 
+              for xml path('')), 1,1,'') AS [Type]
+FROM vwAllAssignments
+GROUP BY [ResourceId], [AccountId], [CreatedTime], [DeletedTime], [DeletedBy]
+create index IX_vwAllAssignments on vwAllAssignments(AccountId, ResourceId, DeletedBy) include(Type)
+
+https://stackoverflow.com/questions/13647394/concatenate-one-field-after-group-by
+
+Method1 usign with < Character in col
+WITH extern
+     AS (SELECT DISTINCT table_name
+         FROM   INFORMATION_SCHEMA.COLUMNS)
+SELECT table_name,
+       LEFT(y.column_names, LEN(y.column_names) - 1) AS column_names
+FROM   extern
+       CROSS APPLY (SELECT column_name + ','
+                    FROM   INFORMATION_SCHEMA.COLUMNS AS intern
+                    WHERE  extern.table_name = intern.table_name
+                    FOR XML PATH(''), TYPE) x (column_names)
+       CROSS APPLY (SELECT x.column_names.value('.', 'NVARCHAR(MAX)')) y(column_names) 
+   
+Method1
+SELECT table_name, LEFT(column_names , LEN(column_names )-1) AS column_names
+FROM information_schema.columns AS extern
+CROSS APPLY
+(
+    SELECT column_name + ','
+    FROM information_schema.columns AS intern
+    WHERE extern.table_name = intern.table_name
+    FOR XML PATH('')
+) pre_trimmed (column_names)
+GROUP BY table_name, column_names;
+
+
+SQL Server 2017 does introduce a new aggregate function
+
+STRING_AGG ( expression, separator).
