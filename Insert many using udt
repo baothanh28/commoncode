@@ -1,0 +1,55 @@
+---Sql
+CREATE TABLE STUDENT
+(
+     StudentId INT NOT NULL,
+     StudentName VARCHAR(100),
+     Isdeleted BIT,
+     PRIMARY KEY (StudentId)
+)
+
+GO
+
+CREATE TYPE udtStudentType AS TABLE
+(
+     StudentId INT NOT NULL,
+     StudentName VARCHAR(100),
+     PRIMARY KEY (StudentId)
+)
+
+
+
+CREATE PROC uspInsertStudents
+(@TempTable AS udtStudentType READONLY)
+AS
+BEGIN
+     INSERT INTO STUDENT (StudentId,StudentName ,Isdeleted )
+     SELECT StudentId, StudentName, 0 AS Isdeleted FROM @TempTable
+END
+
+C#
+public static DataTable StudentTable()
+{
+   DataTable dt = new DataTable();
+   dt.Columns.Add("StudentId", typeof(Int32));
+   dt.Columns.Add("StudentName", typeof(string));
+   return dt;
+}
+//Create Table
+DataTable myTable = StudentTable(); 
+
+// Add New Row to table
+myTable.Rows.Add(1, "NamNV1");
+myTable.Rows.Add(2, "NamNV2");
+myTable.Rows.Add(3, "NamNV3");
+
+SqlConnection connection = new SqlConnection("Data Source= DatabaseName;Initial Catalog=AdventureWorks;User Id=sa;Password=123456;");
+connection.Open();
+SqlCommand cmd = new SqlCommand("uspInsertStudents", connection);
+cmd.CommandType = CommandType.StoredProcedure;
+
+//Passing parameter to Store Procedure
+SqlParameter sqlParam = cmd.Parameters.AddWithValue("@TempTable", myTable);
+sqlParam.SqlDbType = SqlDbType.Structured; 
+cmd.ExecuteNonQuery();
+connection.Close();
+
