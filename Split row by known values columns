@@ -1,0 +1,41 @@
+Flat school level 
+DECLARE @json NVARCHAR(MAX);
+SET @json = N'[
+  {"id": 2, "info": {"name": "John", "surname": "Smith","SchoolLevel":"1"}, "age": 25},
+  {"id": 5, "info": {"name": "Jane", "surname": "Smith","SchoolLevel":"2"}, "dob": "2005-11-04T12:00:00"},
+  {"id": 6, "info": {"name": "King", "surname": "Author","SchoolLevel":"1,2"}, "dob": "2005-11-04T12:00:00"},
+    {"id": 7, "info": {"name": "Leader", "surname": "JDI","SchoolLevel":"3"}, "dob": "2005-11-04T12:00:00"}
+]';
+
+-- CREATE TEMP TABLE 
+Create Table #MyTempTable (
+    SchoolLevelStr NVARCHAR(50),
+	SchoolLevel Int
+);
+
+
+INsert into #MyTempTable
+values (N'1' , 1);
+INsert into #MyTempTable
+values (N'2' , 2);
+INsert into #MyTempTable
+values (N'1' , 1);
+INsert into #MyTempTable
+values (N'1,2' , 2);
+INsert into #MyTempTable
+values (N'1,2' , 1);
+select * from #MyTempTable
+
+SELECT *
+FROM OPENJSON(@json)
+  WITH (
+    id INT 'strict $.id',
+    firstName NVARCHAR(50) '$.info.name',
+    lastName NVARCHAR(50) '$.info.surname',
+    age INT,
+	SchoolLevel NVARCHAR(50) '$.info.SchoolLevel',
+    dateOfBirth DATETIME2 '$.dob'
+  ) As t left join #MyTempTable as mt on t.SchoolLevel=mt.SchoolLevelStr
+
+
+  Drop Table #MyTempTable
