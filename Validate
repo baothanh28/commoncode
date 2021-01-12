@@ -1,0 +1,26 @@
+2 hướng xử lí
+1 Bắt ở đầu request http tương tự như middleware bên .netcore(Xử lí màn hình đến như thế nào ? gắn vào header hay gì? theo base phải gửi kèm lên)
+2 tạo thẻ custom attr tương tự phải có tham số appscreencode đính kèm để thực thi validate
+
+
+public sealed class checkCountry : ValidationAttribute  
+   {  
+       public String AllowCountry { get; set; }  
+  
+       protected override ValidationResult IsValid(object country, ValidationContext validationContext)  
+       {  
+           string[] myarr = AllowCountry.ToString().Split(',');  
+           if (myarr.Contains(country))  
+           {  
+               return ValidationResult.Success;  
+           }  
+           else  
+           {  
+               return new ValidationResult("Please choose a valid country eg.(India,Pakistan,Nepal)");  
+           }  
+       }  
+  
+   }  
+   
+    [checkCountry(AllowCountry = "India,Pakistan,Nepal", ErrorMessage = "please enter a valid country eg( India,SriLanka,Nepal.)")]
+    
