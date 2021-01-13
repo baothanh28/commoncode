@@ -5,7 +5,7 @@ public static void WriteLog(string strLog)
         DirectoryInfo logDirInfo = null;
         FileInfo logFileInfo;
 
-        string logFilePath = "C:\\Logs\\";
+        string logFilePath = "D:\\Logs\\";
         logFilePath = logFilePath + "Log-" + System.DateTime.Today.ToString("MM-dd-yyyy") + "." + "txt";           
         logFileInfo = new FileInfo(logFilePath);
         logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
@@ -25,7 +25,6 @@ public static void WriteLog(string strLog)
     
     can use with debug
     #if DEBUG
-void ConditionalMethod()
-{
-}
+var debug-true;
+if(debug){//return som}
 #endif
