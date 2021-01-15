@@ -1,2 +1,19 @@
 Visual Studio Search and Replace with Regular Expressions json
 https://stackoverflow.com/questions/57386308/search-and-replace-json-multiline-using-regex-in-vscode
+"id": "(.*?)"
+
+Find:     (?<="value":")[^"]+(?=")
+
+"value":"[^"]+"
+
+"id":.*\n"(.*?)"
+
+
+  "id": "(.*?)"
+
+(?<="id":")"(.*?)"
+
+(?<="id":.*\n)"(.*?)"
+
+"id":  "$1","screencode":"$1"
+"id":  "$1","screencode":"ms_Student$1"
