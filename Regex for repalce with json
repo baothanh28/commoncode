@@ -1,0 +1,14 @@
+Regex   "Comments"[ :]+((?=\[)\[[^]]*\]|(?=\{)\{[^\}]*\}|\"[^"]*\") 
+JsonMatched  "Comments": [
+                { 
+                    "User":"Fairy God Mother",
+                    "Comment": "Ha, can't say I didn't see it coming"
+                }
+            ]
+            
+            
+ Regex "Name"[ :]+((?=\[)\[[^]]*\]|(?=\{)\{[^\}]*\}|\"[^"]*\") 
+ hoac chia ra de lay grp 
+ ("name"[ :]+((?=\[)\[[^]]*\]|(?=\{)\{[^\}]*\}|\"([^"]*)\"))
+ grp1 "Name": "Humpty"  || grp2  "Humpty"|| grp 3 Humpty
+ JsonMatched "Name": "Humpty"
