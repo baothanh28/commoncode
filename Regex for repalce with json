@@ -12,3 +12,8 @@ JsonMatched  "Comments": [
  ("name"[ :]+((?=\[)\[[^]]*\]|(?=\{)\{[^\}]*\}|\"([^"]*)\"))
  grp1 "Name": "Humpty"  || grp2  "Humpty"|| grp 3 Humpty
  JsonMatched "Name": "Humpty"
+
+
+("name"[ :]+(\"([^"]*)\")) 
+
+(["']name["'][ :]+[\"\']([^"]*)[\"\'])
