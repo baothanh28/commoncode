@@ -1,0 +1,110 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+
+namespace ReplaceStrInJson
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+
+            //string[] arr =["hethong_yte", "lophoc_yte", "lophoc_giaoduc", "hethong_giaoduc", "hethong_phanquyen", "hethong_suckhoe", "hethong_ansinh", "hethong_xahoi", "lophoc_phanquyen", "lophoc_suckhoe", "lophoc_ansinh", "lophoc_xahoi", "phonghoc_yte", "phonghoc_giaoduc", "phonghoc_phanquyen", "phonghoc_suckhoe", "phonghoc_ansinh", "phonghoc_xahoi"];
+            //string[] arr =["hethong_yte", "lophoc_yte"];
+            //var myDict = arr.ToDictionary(x =>x.Key,x=>"ms_Student"+x).toList();
+            var myDict = new Dictionary<string, string>
+            {
+                    {"hethong_yte","hTyte"},
+                    {"lophoc_yte","lophoc_yte"},
+                    {"lophoc_giaoduc","lophoc_giaoduc"},
+                    {"hethong_giaoduc","hethong_giaoduc"},
+                    {"hethong_phanquyen","hethong_phanquyen"},
+                    {"hethong_suckhoe","hethong_suckhoe"},
+                    {"hethong_ansinh","hethong_ansinh"},
+                    {"hethong_xahoi","hethong_xahoi"},
+                    {"lophoc_phanquyen","lophoc_phanquyen"},
+                    {"lophoc_suckhoe","lophoc_suckhoe"},
+                    {"lophoc_ansinh","lophoc_ansinh"},
+                    {"lophoc_xahoi","lophoc_xahoi"},
+                    {"phonghoc_yte","phonghoc_yte"},
+                    {"phonghoc_giaoduc","phonghoc_giaoduc"},
+                    {"phonghoc_phanquyen","phonghoc_phanquyen"},
+                    {"phonghoc_suckhoe","phonghoc_suckhoe"},
+                    {"phonghoc_ansinh","phonghoc_ansinh"},
+                    {"phonghoc_xahoi","phonghoc_xahoi"}
+             };
+            GenerateUIConfig("D:\\Logs\\UiConfig.txt", "D:\\Logs\\UiConfigDathemScreenCode1.txt", myDict);
+
+        }
+        public static void GenerateUIConfig(string inputFilePath, string outputFilePath,Dictionary<string,string>dataSrc)
+        {
+            var rs=GetContent(inputFilePath, dataSrc);
+            WriteToFile(rs, outputFilePath);
+        }
+
+        public static string GetContent(string filePath, Dictionary<string, string> source)
+        {
+
+            var content = string.Empty;
+            List<string> lines = new List<string>();
+            lines = File.ReadAllLines(filePath).ToList();
+
+            foreach (var line in lines)
+            {
+
+                //content +=Regex.Replace(line, "key[ :]+[\"\']([^\"\']*)[\"\']", m => m.Groups[1].Value + " ,\n screencode : \"" + m.Groups[1].Value+",\"\n"); ;
+                content+=ReplaceText(line,source);
+
+            }
+            return content;
+        }
+
+        public static void WriteToFile(string content, string outputFilePath)
+        {
+            StreamWriter log;
+            FileStream fileStream = null;
+            DirectoryInfo logDirInfo = null;
+            FileInfo logFileInfo;
+
+           
+            logFileInfo = new FileInfo(outputFilePath);
+            logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
+            if (!logDirInfo.Exists) logDirInfo.Create();
+            if (!logFileInfo.Exists)
+            {
+                fileStream = logFileInfo.Create();
+            }
+            else
+            {
+                fileStream = new FileStream(outputFilePath, FileMode.Append);
+            }
+            log = new StreamWriter(fileStream);
+            log.WriteLine(content);
+            log.Close();
+        }
+        
+        public static string ReplaceText(string line,Dictionary<string,string> source)
+        {
+            var strReplace = string.Empty;
+            Regex regEx = new Regex("key[ :]+[\"\']([^\"\']*)[\"\']");
+            Match match = regEx.Match(line);
+            string screenKey;
+            if (match.Success)
+            {
+                if(source.TryGetValue(match.Groups[1].Value,out screenKey))
+                {
+                    strReplace = match.Groups[0].Value + ",\n" + "screencode: " + $"\'{screenKey}\'";
+                    line = line.Replace(match.Groups[0].Value, strReplace);
+                }
+            }
+            return line +'\n';
+
+        }
+
+
+    }
+}
