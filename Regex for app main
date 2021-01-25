@@ -1,3 +1,32 @@
 AppMain.Navigation\(([^,]*), 
 Match with text between ( and first ,
 Then if is function() +> get current url, if is 'a/b/c'=> change to uiconfig key
+In AppMain have function convert Url to UIConfig key
+
+
+ private static string converUrlToUIConfig(string url, string pKey)
+        {
+            List<string> listRs; string rs;
+            if (url.Contains("()"))
+            {
+                return pKey;
+            }
+            rs = Regex.Replace(url, @"\s+", "").Replace("\"", string.Empty).Replace("\'", string.Empty);
+            listRs = rs.Split("/").ToList();
+            if (listRs.Count == 4)
+            {
+                return string.Join("_", listRs[2], listRs[3]);
+            }
+            if (listRs.Count == 3)
+            {
+                return string.Join("_",listRs[1], listRs[2]);
+            }
+            if (listRs.Count == 2)
+            {
+                return string.Join("_", listRs[0], listRs[1]);
+            }
+            else
+            {
+                return listRs[0];
+            }
+        }
