@@ -1,0 +1,75 @@
+Thuc day som hoan thien not phan sql
+Tam de di an cuoi
+
+ALTER TABLE table_name
+ADD column_name NVARCHAR(MAX);
+
+//seperate sql
+Tao ddoori truc tiep voi anh Giang
+for
+Vieest scripts chinh sua
+
+Bo sung them truong moi vao view cu
+viet function tach ra list object
+
+Viet ham xu li cac su kien buoi sang buoi chieu o main de render kai grid
+Viet ham build ra cay du lieu o phia server truoc
+phia js au
+
+
+
+lafm viec a thang bao
+
+
+private List<PreferredLessonData> CreateList(PreferredLessonData preferredItem)
+        {
+            int TOTAL_LESSON_INFO = 3;
+            char LESSON_DELEMITER = ';';
+            char LESSON_INFO_DELEMITER = '-';
+
+            int day, time, section;
+            
+            var rs = new List<PreferredLessonData>();
+            if (string.IsNullOrEmpty(preferredItem.PreferredLesson))
+            {
+                //return loi 
+                return new List<PreferredLessonData>();
+            }
+            var lstLessonInfo = preferredItem.PreferredLesson.Split(LESSON_DELEMITER).ToList();
+            if (lstLessonInfo==null|| !lstLessonInfo.Any())
+            {
+                return new List<PreferredLessonData>();
+            }
+
+            for (int i = 0; i < lstLessonInfo.Count; i++)
+            {
+                var lstInfo = lstLessonInfo[i].Split(LESSON_INFO_DELEMITER).ToList();
+                if(lstInfo==null||lstInfo.Count!= TOTAL_LESSON_INFO)
+                {
+                    //return loi
+                    return new List<PreferredLessonData>();
+                }
+                if(!int.TryParse(lstInfo[0],out section))
+                {
+                    //return loi
+                    return new List<PreferredLessonData>();
+                }
+                if (!int.TryParse(lstInfo[1], out day))
+                {
+                    //return loi
+                    return new List<PreferredLessonData>();
+                }
+                if (!int.TryParse(lstInfo[2], out time))
+                {
+                    //return loi
+                    return new List<PreferredLessonData>();
+                }
+                rs.Add(new PreferredLessonData()
+                {
+
+                })
+
+            }
+            return rs;
+        }
+		
