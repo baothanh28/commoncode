@@ -1,0 +1,172 @@
+Ext.define('Shop.view.orders.OrderProperties', {
+    extend: 'Ext.container.Viewport',
+	xtype: 'order-prop',
+    reference: 'OrderProp',
+    
+   
+    layout: 'hbox',
+    items: [{
+        xtype: 'orders-prop-grid',
+        flex: 4
+    },{
+        xtype: 'panel',
+        html: 'Some text',
+        flex: 1
+    }]
+});
+Ext.define('Shop.view.orders.ordersOrderPropertiesGrid', {
+    extend: 'Ext.grid.Panel',
+    xtype: 'orders-prop-grid',
+    reference: 'ordersPropGrid',
+    selModel:  {        
+ type                    : 'spreadsheet',
+ rowNumbererHeaderWidth    : 0
+},
+    height: 200,
+    border: true,
+    columnLines: true,
+       listeners: {
+       selectionchange		: function(grid, selection, eOpts) { 
+       		console.log(arguments);
+       		
+			var changeCellValue= function(grid,row,col){
+				var record,colname,cellvalue;
+				record = grid.store.getAt(row);
+				colname = grid.headerCt.getHeaderAtIndex(col).dataIndex;
+				cellvalue = record.data[colname];
+				console.log(cellvalue)
+				if(cellvalue=='selected'){
+					record.set(colname, 'unselected');
+				}else{
+					record.set(colname, 'selected');
+				}
+			
+				record.commit();
+			};
+			
+			if(selection && selection.lastRange && ( selection.lastRange.length==2)){
+				var startCol=selection.endCell.colIdx;
+				var endCol=selection.lastRange[1][0];
+				var startRow=selection.startCell.rowIdx;
+				var endRow=selection.endCell.rowIdx;
+				
+				//thuc hien set lai gia tri tuong ung voi moi hang
+				for(var i=startRow;i<=endRow;i++){
+					for(var j=startCol;j<=endCol;j++){
+						changeCellValue(grid,i,j)
+					}
+				}
+			}
+			
+			
+			//neu startCol=0=> tang len 1
+			//neu startRow= 0 => tang len 1
+			//neu endCol =0 => do nothing
+			//neu endRow= 0 =. do nothing
+			//dam bao ko thao tac voi row 1 va col 1
+			if((startCol+endCol)==0||endCol+startCol)==0){
+				//do no thing
+				
+			}
+			
+			
+		
+			
+       }
+          
+       
+    },
+    viewModel: {
+        stores: {
+            ordersGrid: {
+                fields: ['name','topping','quantity','transport'],
+                data: [{
+                    name: 'Name',
+                    topping: 'Topping',
+                    quantity: 12,
+                    transport: 'Transport'
+                },{
+                    name: 'Name',
+                    topping: 'Topping',
+                    quantity: 12,
+                    transport: 'Transport'
+                },{
+                    name: 'Name',
+                    topping: 'Topping',
+                    quantity: 12,
+                    transport: 'Transport'
+                },{
+                    name: 'Name',
+                    topping: 'Topping',
+                    quantity: 12,
+                    transport: 'Transport'
+                },{
+                    name: 'Name',
+                    topping: 'Topping',
+                    quantity: 12,
+                    transport: 'Transport'
+                },{
+                    name: 'Name',
+                    topping: 'Topping',
+                    quantity: 12,
+                    transport: 'Transport'
+                },{
+                    name: 'Name',
+                    topping: 'Topping',
+                    quantity: 12,
+                    transport: 'Transport'
+                },{
+                    name: 'Name',
+                    topping: 'Topping',
+                    quantity: 12,
+                    transport: 'Transport'
+                },{
+                    name: 'Name',
+                    topping: 'Topping',
+                    quantity: 12,
+                    transport: 'Transport'
+                },{
+                    name: 'Name',
+                    topping: 'Topping',
+                    quantity: 12,
+                    transport: 'Transport'
+                }]
+            }
+        }  
+    },
+    bind: {
+        store: '{ordersGrid}'
+    },
+    columns: {
+        items: [{
+            text: "item",
+            dataIndex: 'name',
+            flex: 6
+        }, {
+            text: "topping",
+            dataIndex: 'topping',
+            flex: 2
+        }, {
+            text: "quantity",
+            dataIndex: 'quantity',
+            flex: 2
+        }, {
+            xtype: 'booleancolumn',
+            text: "delivery",
+            align: 'center',
+            dataIndex: 'transport',
+            flex: 1,
+            trueText: "כן",
+            falseText: "לא"
+        }]
+    }
+});
+Ext.application({
+    name: 'Fiddle',
+
+    launch: function() {
+        Ext.widget('order-prop', {
+            renderTo: document.body
+        })
+    }
+});
